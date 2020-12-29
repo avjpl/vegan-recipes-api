@@ -2,6 +2,7 @@ const { gql } = require('apollo-server');
 
 const { GraphQLObject } = require('../types');
 const { mapPost } = require('../mappings');
+const pubsub = require('../pubsub');
 
 const typeDefs = gql`
   type Details {
@@ -34,6 +35,10 @@ const typeDefs = gql`
     posts: [Post!]!
     post(slug: String!): Post
   }
+
+  extend type Subscription {
+    viewedPost: Post
+  }
 `;
 
 const resolvers = {
@@ -45,8 +50,20 @@ const resolvers = {
     },
     post: async (_, { slug }, { dataSources: { contentfulAPI } }) => {
       const { items } = await contentfulAPI.getEntry('recipe', slug);
-      return items.map(mapPost)[0];
+
+      const post = items.map(mapPost)[0];
+
+      pubsub.publish('viewedPost', {
+        viewedPost: post,
+      });
+
+      return post;
     }
+  },
+  Subscription: {
+    viewedPost: {
+      subscribe: () => pubsub.asyncIterator(['viewedPost']),
+    },
   },
 };
 
