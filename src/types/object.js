@@ -8,7 +8,7 @@ const GraphQLObject = new GraphQLScalarType({
   },
   parseValue(value) {
     return value;
-  }
+  },
 });
 
 module.exports.GraphQLObject = GraphQLObject;

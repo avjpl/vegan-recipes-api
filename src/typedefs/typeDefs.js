@@ -1,9 +1,7 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
-  directive @date(
-    defaultFormat: String = "Do MMMM YYYY"
-  ) on FIELD_DEFINITION
+  directive @date(defaultFormat: String = "Do MMMM YYYY") on FIELD_DEFINITION
 
   scalar Date
   scalar Object

@@ -58,7 +58,7 @@ const resolvers = {
       });
 
       return post;
-    }
+    },
   },
   Subscription: {
     viewedPost: {
